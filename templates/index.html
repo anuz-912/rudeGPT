@@ -12,8 +12,6 @@
             --dark: #0A0A0A;
             --light: #FFFFFF;
             --gray-100: #F3F4F6;
-            --gray-200: #E5E7EB;
-            --gray-800: #1F2937;
             --glass: rgba(255, 255, 255, 0.1);
             --glass-dark: rgba(0, 0, 0, 0.7);
             --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -73,19 +71,12 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            position: relative;
             height: 80vh;
         }
 
         .chat-header {
             padding: 1.5rem;
             border-bottom: 1px solid var(--glass);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .header-left {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -111,28 +102,6 @@
             gap: 1.5rem;
         }
 
-        .message {
-            max-width: 70%;
-            padding: 1rem 1.5rem;
-            border-radius: 16px;
-            font-weight: 500;
-            line-height: 1.5;
-            position: relative;
-            animation: slideIn 0.3s var(--ease);
-        }
-
-        .message.user {
-            background: var(--gradient);
-            align-self: flex-end;
-            border-bottom-right-radius: 4px;
-        }
-
-        .message.bot {
-            background: var(--glass);
-            align-self: flex-start;
-            border-bottom-left-radius: 4px;
-        }
-
         .chat-input {
             padding: 1.5rem;
             border-top: 1px solid var(--glass);
@@ -140,19 +109,13 @@
             gap: 1rem;
         }
 
-        .input-container {
-            flex: 1;
-            position: relative;
-        }
-
         input {
-            width: 100%;
+            flex: 1;
             padding: 1rem 1.5rem;
             background: var(--glass);
             border: 1px solid var(--glass);
             border-radius: 12px;
             color: var(--light);
-            font-family: inherit;
             font-size: 1rem;
             transition: all 0.3s var(--ease);
         }
@@ -163,22 +126,15 @@
             box-shadow: 0 0 0 2px rgba(255, 51, 102, 0.2);
         }
 
-        input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
         button {
             padding: 1rem 2rem;
             background: var(--gradient);
             border: none;
             border-radius: 12px;
             color: var(--light);
-            font-family: inherit;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s var(--ease);
-            position: relative;
-            overflow: hidden;
         }
 
         button:hover {
@@ -186,186 +142,91 @@
             box-shadow: 0 10px 20px rgba(255, 51, 102, 0.2);
         }
 
-        button::after {
-            content: '';
-            position: absolute;
+        /* Disclaimer Popup */
+        .disclaimer-popup {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(transparent, rgba(255, 255, 255, 0.2));
-            opacity: 0;
-            transition: opacity 0.3s var(--ease);
-        }
-
-        button:hover::after {
-            opacity: 1;
-        }
-
-        .credit {
-            position: fixed;
-            bottom: 1rem;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.9rem;
-            opacity: 0.7;
-            transition: opacity 0.3s var(--ease);
-            background: var(--glass-dark);
-            backdrop-filter: blur(10px);
-            padding: 0.75rem 1.5rem;
-            border-radius: 12px;
-            border: 1px solid var(--glass);
-            text-align: center;
-        }
-
-        .credit:hover {
-            opacity: 1;
-        }
-
-        .credit a {
-            color: var(--light);
-            text-decoration: none;
-            font-weight: 500;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            color: transparent;
-            margin-left: 0.5rem;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--glass);
-            border-radius: 3px;
-        }
-
-        .toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--gradient);
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            font-weight: 500;
-            animation: slideInRight 0.3s var(--ease);
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
             z-index: 1000;
         }
 
-        @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+        .disclaimer-box {
+            background: var(--glass-dark);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid var(--glass);
+            text-align: center;
+            max-width: 400px;
         }
 
-        @media (max-width: 640px) {
-            .message {
-                max-width: 85%;
-            }
+        .disclaimer-box p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
 
-            .chat-input {
-                padding: 1rem;
-            }
+        .disclaimer-box button {
+            padding: 0.75rem 1.5rem;
+            background: var(--gradient);
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s var(--ease);
+        }
 
-            button {
-                padding: 1rem;
-            }
-
-            .logo {
-                font-size: 1.5rem;
-            }
-
-            .credit {
-                padding: 0.5rem 1rem;
-                font-size: 0.8rem;
-            }
+        .disclaimer-box button:hover {
+            transform: translateY(-2px);
         }
     </style>
 </head>
 <body>
     <div class="background"></div>
-    
+
+    <!-- Disclaimer Popup -->
+    <div class="disclaimer-popup" id="disclaimer">
+        <div class="disclaimer-box">
+            <p>The developer doesn't hold responsibility for the response you get.<br> Use for entertainment purposes only.</p>
+            <button onclick="closeDisclaimer()">Proceed</button>
+        </div>
+    </div>
+
     <div class="container">
         <main class="chat-area">
             <header class="chat-header">
-                <div class="header-left">
-                    <div class="logo">RudeGPT</div>
-                </div>
+                <div class="logo">RudeGPT</div>
             </header>
 
-            <div class="chat-messages" id="chat-messages">
-                <!-- Messages will be dynamically added here -->
-            </div>
+            <div class="chat-messages" id="chat-messages"></div>
 
             <div class="chat-input">
-                <div class="input-container">
-                    <input 
-                        type="text" 
-                        id="message-input" 
-                        placeholder="Type your message..."
-                        onkeypress="if(event.key === 'Enter') sendMessage()"
-                    >
-                </div>
+                <input type="text" id="message-input" placeholder="Type your message..." onkeypress="if(event.key === 'Enter') sendMessage()">
                 <button onclick="sendMessage()">Send</button>
             </div>
         </main>
     </div>
 
-    <div class="credit">
-        Created by <a href="https://www.instagram.com/anuz.912" target="_blank">Anuz</a>
-    </div>
-
     <script>
-        function showToast(message) {
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.remove();
-            }, 3000);
+        function closeDisclaimer() {
+            document.getElementById('disclaimer').style.display = 'none';
         }
 
         async function sendMessage() {
             const input = document.getElementById('message-input');
             const query = input.value.trim();
             
-            if (!query) {
-                showToast('Please type a message first!');
-                return;
-            }
+            if (!query) return;
             
             const chatMessages = document.getElementById('chat-messages');
-            
-            // Add user message
             const userMessage = document.createElement('div');
-            userMessage.className = 'message user';
             userMessage.textContent = query;
             chatMessages.appendChild(userMessage);
             
-            // Clear input and scroll to bottom
             input.value = '';
             chatMessages.scrollTop = chatMessages.scrollHeight;
             
@@ -376,36 +237,18 @@
                     body: JSON.stringify({ query })
                 });
                 
-                if (!response.ok) throw new Error('Network response was not ok');
-                
                 const data = await response.json();
-                
-                // Add bot message with slight delay
                 setTimeout(() => {
                     const botMessage = document.createElement('div');
-                    botMessage.className = 'message bot';
                     botMessage.textContent = data.answer;
                     chatMessages.appendChild(botMessage);
                     chatMessages.scrollTop = chatMessages.scrollHeight;
                 }, 300);
                 
             } catch (error) {
-                setTimeout(() => {
-                    const errorMessage = document.createElement('div');
-                    errorMessage.className = 'message bot';
-                    errorMessage.textContent = "Oops! Something went wrong. Please try again.";
-                    chatMessages.appendChild(errorMessage);
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-                }, 300);
-                
                 console.error('Error:', error);
             }
         }
-
-        // Focus input on load
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('message-input').focus();
-        });
     </script>
 </body>
 </html>
