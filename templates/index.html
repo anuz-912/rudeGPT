@@ -186,6 +186,12 @@
             box-shadow: 0 10px 20px rgba(255, 51, 102, 0.2);  
         }  
 
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         button::after {  
             content: '';  
             position: absolute;  
@@ -232,7 +238,6 @@
             margin-left: 0.5rem;  
         }  
 
-        /* Disclaimer Popup Styles */
         .disclaimer-overlay {
             position: fixed;
             top: 0;
@@ -375,10 +380,10 @@
                         type="text"   
                         id="message-input"   
                         placeholder="Type your message..."  
-                        onkeypress="if(event.key === 'Enter') sendMessage()"  
+                        onkeypress="handleKeyPress(event)"
                     >  
                 </div>  
-                <button onclick="sendMessage()">Send</button>  
+                <button id="send-button" onclick="sendMessage()">Send</button>  
             </div>  
         </main>  
     </div>  
@@ -388,9 +393,17 @@
     </div>  
 
     <script>  
+        let isProcessing = false;
+
         function proceedToChat() {
             document.getElementById('disclaimerOverlay').style.display = 'none';
             document.getElementById('message-input').focus();
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !isProcessing) {
+                sendMessage();
+            }
         }
 
         function showToast(message) {  
@@ -405,13 +418,19 @@
         }  
 
         async function sendMessage() {  
+            if (isProcessing) return;
+
             const input = document.getElementById('message-input');  
+            const sendButton = document.getElementById('send-button');
             const query = input.value.trim();  
               
             if (!query) {  
                 showToast('Please type a message first!');  
                 return;  
             }  
+
+            isProcessing = true;
+            sendButton.disabled = true;
               
             const chatMessages = document.getElementById('chat-messages');  
               
@@ -442,26 +461,14 @@
                     botMessage.className = 'message bot';  
                     botMessage.textContent = data.answer;  
                     chatMessages.appendChild(botMessage);  
-                    chatMessages.scrollTop = chatMessages.scrollHeight;  
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                    isProcessing = false;
+                    sendButton.disabled = false;
+                    input.focus();
                 }, 300);  
                   
             } catch (error) {  
                 setTimeout(() => {  
                     const errorMessage = document.createElement('div');  
                     errorMessage.className = 'message bot';  
-                    errorMessage.textContent = "Oops! Something went wrong. Please try again.";  
-                    chatMessages.appendChild(errorMessage);  
-                    chatMessages.scrollTop = chatMessages.scrollHeight;  
-                }, 300);  
-                  
-                console.error('Error:', error);  
-            }  
-        }  
-
-        // Focus input on load  
-        document.addEventListener('DOMContentLoaded', () => {  
-            document.getElementById('message-input').focus();  
-        });  
-    </script>
-</body>  
-</html>
+                    errorMessage.textContent = "</antArtifact>
