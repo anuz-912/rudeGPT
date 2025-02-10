@@ -11,9 +11,8 @@
             --secondary: #6C63FF;
             --dark: #0A0A0A;
             --light: #FFFFFF;
-            --gray-100: #F3F4F6;
-            --glass: rgba(255, 255, 255, 0.1);
             --glass-dark: rgba(0, 0, 0, 0.7);
+            --glass: rgba(255, 255, 255, 0.1);
             --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
             --ease: cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -71,6 +70,7 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            position: relative;
             height: 80vh;
         }
 
@@ -102,6 +102,27 @@
             gap: 1.5rem;
         }
 
+        .message {
+            max-width: 70%;
+            padding: 1rem 1.5rem;
+            border-radius: 16px;
+            font-weight: 500;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .message.user {
+            background: var(--gradient);
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.bot {
+            background: var(--glass);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
         .chat-input {
             padding: 1.5rem;
             border-top: 1px solid var(--glass);
@@ -109,21 +130,18 @@
             gap: 1rem;
         }
 
-        input {
+        .input-container {
             flex: 1;
+        }
+
+        input {
+            width: 100%;
             padding: 1rem 1.5rem;
             background: var(--glass);
             border: 1px solid var(--glass);
             border-radius: 12px;
             color: var(--light);
             font-size: 1rem;
-            transition: all 0.3s var(--ease);
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(255, 51, 102, 0.2);
         }
 
         button {
@@ -139,60 +157,85 @@
 
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(255, 51, 102, 0.2);
         }
 
-        /* Disclaimer Popup */
-        .disclaimer-popup {
+        .credit {
+            position: fixed;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.9rem;
+            background: var(--glass-dark);
+            backdrop-filter: blur(10px);
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--glass);
+            text-align: center;
+        }
+
+        .credit a {
+            color: var(--light);
+            font-weight: 500;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        /* Popup Disclaimer */
+        .popup {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.8);
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             z-index: 1000;
         }
 
-        .disclaimer-box {
+        .popup-content {
             background: var(--glass-dark);
             padding: 2rem;
-            border-radius: 16px;
-            border: 1px solid var(--glass);
             text-align: center;
+            border-radius: 16px;
             max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass);
         }
 
-        .disclaimer-box p {
-            font-size: 1.1rem;
+        .popup-content h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .popup-content p {
+            font-size: 1rem;
             margin-bottom: 1.5rem;
+            opacity: 0.8;
         }
 
-        .disclaimer-box button {
-            padding: 0.75rem 1.5rem;
-            background: var(--gradient);
-            border: none;
+        .popup button {
+            padding: 1rem 2rem;
             border-radius: 12px;
+            border: none;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s var(--ease);
-        }
-
-        .disclaimer-box button:hover {
-            transform: translateY(-2px);
+            background: var(--gradient);
+            color: var(--light);
         }
     </style>
 </head>
 <body>
     <div class="background"></div>
 
-    <!-- Disclaimer Popup -->
-    <div class="disclaimer-popup" id="disclaimer">
-        <div class="disclaimer-box">
-            <p>The developer doesn't hold responsibility for the response you get.<br> Use for entertainment purposes only.</p>
-            <button onclick="closeDisclaimer()">Proceed</button>
+    <!-- Popup Disclaimer -->
+    <div class="popup" id="popup">
+        <div class="popup-content">
+            <h2>Disclaimer</h2>
+            <p>The developer doesn't hold responsibility for the response you get. Use for entertainment purposes only.</p>
+            <button onclick="closePopup()">Proceed</button>
         </div>
     </div>
 
@@ -211,43 +254,13 @@
         </main>
     </div>
 
-    <script>
-        function closeDisclaimer() {
-            document.getElementById('disclaimer').style.display = 'none';
-        }
+    <div class="credit">
+        Created by <a href="https://www.instagram.com/anuz.912" target="_blank">Anuz</a>
+    </div>
 
-        async function sendMessage() {
-            const input = document.getElementById('message-input');
-            const query = input.value.trim();
-            
-            if (!query) return;
-            
-            const chatMessages = document.getElementById('chat-messages');
-            const userMessage = document.createElement('div');
-            userMessage.textContent = query;
-            chatMessages.appendChild(userMessage);
-            
-            input.value = '';
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-            
-            try {
-                const response = await fetch("/ask", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ query })
-                });
-                
-                const data = await response.json();
-                setTimeout(() => {
-                    const botMessage = document.createElement('div');
-                    botMessage.textContent = data.answer;
-                    chatMessages.appendChild(botMessage);
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-                }, 300);
-                
-            } catch (error) {
-                console.error('Error:', error);
-            }
+    <script>
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
         }
     </script>
 </body>
