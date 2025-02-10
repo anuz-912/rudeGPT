@@ -19,7 +19,6 @@
             --gradient: linear-gradient(135deg, var(--primary), var(--secondary));  
             --ease: cubic-bezier(0.4, 0, 0.2, 1);  
         }  
-
         * {  
             margin: 0;  
             padding: 0;  
@@ -186,12 +185,6 @@
             box-shadow: 0 10px 20px rgba(255, 51, 102, 0.2);  
         }  
 
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
         button::after {  
             content: '';  
             position: absolute;  
@@ -290,6 +283,17 @@
             }  
         }  
 
+        @keyframes slideInRight {  
+            from {  
+                transform: translateX(100%);  
+                opacity: 0;  
+            }  
+            to {  
+                transform: translateX(0);  
+                opacity: 1;  
+            }  
+        }  
+
         ::-webkit-scrollbar {  
             width: 6px;  
         }  
@@ -313,17 +317,6 @@
             font-weight: 500;  
             animation: slideInRight 0.3s var(--ease);  
             z-index: 1000;  
-        }  
-
-        @keyframes slideInRight {  
-            from {  
-                transform: translateX(100%);  
-                opacity: 0;  
-            }  
-            to {  
-                transform: translateX(0);  
-                opacity: 1;  
-            }  
         }  
 
         @media (max-width: 640px) {  
@@ -353,7 +346,6 @@
 <body>  
     <div class="background"></div>  
     
-    <!-- Disclaimer Popup -->
     <div class="disclaimer-overlay" id="disclaimerOverlay">
         <div class="disclaimer-popup">
             <h2>Disclaimer</h2>
@@ -371,7 +363,6 @@
             </header>  
 
             <div class="chat-messages" id="chat-messages">  
-                <!-- Messages will be dynamically added here -->  
             </div>  
 
             <div class="chat-input">  
@@ -380,10 +371,10 @@
                         type="text"   
                         id="message-input"   
                         placeholder="Type your message..."  
-                        onkeypress="handleKeyPress(event)"
+                        onkeydown="if(event.key === 'Enter') sendMessage()"
                     >  
                 </div>  
-                <button id="send-button" onclick="sendMessage()">Send</button>  
+                <button onclick="sendMessage()" id="send-button">Send</button>  
             </div>  
         </main>  
     </div>  
@@ -393,17 +384,14 @@
     </div>  
 
     <script>  
-        let isProcessing = false;
+        // Initialize references
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+        const chatMessages = document.getElementById('chat-messages');
 
         function proceedToChat() {
             document.getElementById('disclaimerOverlay').style.display = 'none';
-            document.getElementById('message-input').focus();
-        }
-
-        function handleKeyPress(event) {
-            if (event.key === 'Enter' && !isProcessing) {
-                sendMessage();
-            }
+            messageInput.focus();
         }
 
         function showToast(message) {  
@@ -411,64 +399,60 @@
             toast.className = 'toast';  
             toast.textContent = message;  
             document.body.appendChild(toast);  
-              
-            setTimeout(() => {  
-                toast.remove();  
-            }, 3000);  
+            setTimeout(() => toast.remove(), 3000);  
         }  
 
         async function sendMessage() {  
-            if (isProcessing) return;
-
-            const input = document.getElementById('message-input');  
-            const sendButton = document.getElementById('send-button');
-            const query = input.value.trim();  
-              
+            const query = messageInput.value.trim();  
+            
             if (!query) {  
                 showToast('Please type a message first!');  
                 return;  
             }  
-
-            isProcessing = true;
-            sendButton.disabled = true;
-              
-            const chatMessages = document.getElementById('chat-messages');  
-              
+            
             // Add user message  
             const userMessage = document.createElement('div');  
             userMessage.className = 'message user';  
             userMessage.textContent = query;  
             chatMessages.appendChild(userMessage);  
-              
+            
             // Clear input and scroll to bottom  
-            input.value = '';  
+            messageInput.value = '';  
             chatMessages.scrollTop = chatMessages.scrollHeight;  
-              
+            
             try {  
                 const response = await fetch("/ask", {  
                     method: "POST",  
                     headers: { "Content-Type": "application/json" },  
                     body: JSON.stringify({ query })  
                 });  
-                  
+                
                 if (!response.ok) throw new Error('Network response was not ok');  
-                  
+                
                 const data = await response.json();  
-                  
-                // Add bot message with slight delay  
-                setTimeout(() => {  
-                    const botMessage = document.createElement('div');  
-                    botMessage.className = 'message bot';  
-                    botMessage.textContent = data.answer;  
-                    chatMessages.appendChild(botMessage);  
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-                    isProcessing = false;
-                    sendButton.disabled = false;
-                    input.focus();
-                }, 300);  
-                  
+                
+                const botMessage = document.createElement('div');  
+                botMessage.className = 'message bot';  
+                botMessage.textContent = data.answer;  
+                chatMessages.appendChild(botMessage);  
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
             } catch (error) {  
-                setTimeout(() => {  
-                    const errorMessage = document.createElement('div');  
-                    errorMessage.className = 'message bot';  
-                    errorMessage.textContent = "</antArtifact>
+                const errorMessage = document.createElement('div');  
+                errorMessage.className = 'message bot';  
+                errorMessage.textContent = "Oops! Something went wrong. Please try again.";  
+                chatMessages.appendChild(errorMessage);  
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                console.error('Error:', error);  
+            }  
+            
+            messageInput.focus();
+        }  
+
+        // Initialize focus on load
+        document.addEventListener('DOMContentLoaded', () => {
+            messageInput.focus();
+        });
+    </script>
+</body>  
+</html>
