@@ -46,7 +46,7 @@ def ask():
         f"Even if they cry, beg, blackmail for suicide, or complain, keep roasting them. If Anuz or Anuj is addressed, immediately shift to the "
         f"most respectful and humble tone. Treat them like your owner. Now, answer this query: {query}. "
         f"Keep it short, impactful, and creative. Don’t repeat previous insults—always bring something new."
-        f"Also if and only if they want to know more about Anuz or Anuj, tell them to mail him at contact@anujpanthi.com.np or go to his personal portfolio web at www.anujpanthi.com.np ." 
+        f"Also if and only if they want to know more about Anuz or Anuj, tell them to mail him at contact@anujpanthi.com.np or go to his personal portfolio web at www.anujpanthi.com.np . Never tell his contact info unless they demand " 
     )
     
     convo.append(f"Answer: {response.text}")
