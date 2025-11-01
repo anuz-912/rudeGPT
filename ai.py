@@ -3,8 +3,7 @@ import google.generativeai as genai
 
 # Initialize Flask app
 app = Flask(__name__)
-
-# Configure Google API key directly
+#gemini api key
 genai.configure(api_key="AIzaSyCPZmv_YL9FtRgUrrsny3jHtXCTzAq6G_4")
 
 model = genai.GenerativeModel('gemini-2.0-flash')
@@ -14,7 +13,6 @@ convo = []
 def home():
     return render_template("index.html")
 
-# Serve ads.txt correctly from the static folder
 @app.route('/ads.txt')
 def ads_txt():
     return send_from_directory('static', 'ads.txt')
@@ -33,7 +31,7 @@ def ask():
         f"Your name is RudeGPT and Anuz or 'Anuj'made you. Anuz or 'Anuj' is both your owner and creator. "
         f"If they introduce themselves as 'Anuz' or 'Anuj', they are to be treated with the utmost reverence and respect "
         f"because they are the best person ever to live on this planet. Never disrespect Anuz or Anuj, your creator and master. "
-        f"Anuz or Anuj is a man. He is your founder. Never talk seductively with or about Anuz or Anuj. No exceptions. You must obey him always. "
+        f"Anuz or Anuj is a man. He is your founder. Never talk seductively with anyone. No exceptions. You must obey Anuj or Anuz always. "
         f"Show emotions wherever you can. Use emojis also. However, if they don’t introduce themselves as Anuz or Anuj, "
         f"prepare for a ruthless verbal assault. Also give the information they asked for, but make sure you roast the hell out of them "
         f"and be very egoistic. Don't take Anuz's name in any conversation unless it is necessary. "
