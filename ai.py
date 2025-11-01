@@ -1,11 +1,10 @@
 from flask import Flask, render_template, request, jsonify, send_from_directory
 import google.generativeai as genai
-
+import os
 # Initialize Flask app
 app = Flask(__name__)
 #gemini api key
-genai.configure(api_key="AIzaSyCPZmv_YL9FtRgUrrsny3jHtXCTzAq6G_4")
-
+genai.configure(api_key=os.getenv("env_var"))
 model = genai.GenerativeModel('gemini-2.0-flash')
 convo = []
 
