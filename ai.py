@@ -3,7 +3,7 @@ import google.generativeai as genai
 import os
 app = Flask(__name__)
 genai.configure(api_key=os.getenv("env_var"))
-model = genai.GenerativeModel('gemini-2.0-flash')
+model = genai.GenerativeModel('gemini-1.5-flash')
 convo = []
 
 @app.route('/')
