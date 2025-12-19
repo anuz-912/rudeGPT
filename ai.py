@@ -40,7 +40,7 @@ def get_model():
         raise RuntimeError("❌ GEMINI_API_KEY missing at request time")
 
     genai.configure(api_key=api_key)
-    return genai.GenerativeModel("gemini-1.5-flash")
+    return genai.GenerativeModel("text-bison-001")
 
 
 # -----------------------------------
